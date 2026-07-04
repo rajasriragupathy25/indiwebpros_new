@@ -1,0 +1,163 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#111;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* Navbar */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 50px;
+    background:#000;
+    position:sticky;
+    top:0;
+}
+
+.logo{
+    color:red;
+    font-size:35px;
+    font-weight:bold;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-size:18px;
+}
+
+nav a:hover{
+    color:red;
+}
+
+/* Banner */
+.banner{
+    height:500px;
+    background:url("images/banner.jpg") center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    padding-left:60px;
+}
+
+.banner-content{
+    max-width:500px;
+}
+
+.banner h1{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.banner p{
+    font-size:20px;
+    margin-bottom:20px;
+}
+
+.play-btn,
+.info-btn{
+    padding:12px 25px;
+    border:none;
+    font-size:18px;
+    border-radius:5px;
+    cursor:pointer;
+    margin-right:10px;
+}
+
+.play-btn{
+    background:red;
+    color:white;
+}
+
+.info-btn{
+    background:white;
+    color:black;
+}
+
+.play-btn:hover{
+    background:darkred;
+}
+
+.info-btn:hover{
+    background:#ddd;
+}
+
+/* Rows */
+.row{
+    margin:30px;
+}
+
+.row h2{
+    margin-bottom:15px;
+}
+
+.row-posters{
+    display:flex;
+    gap:15px;
+    overflow-x:auto;
+    padding-bottom:10px;
+}
+
+.row-posters img{
+    width:180px;
+    height:260px;
+    border-radius:8px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.row-posters img:hover{
+    transform:scale(1.08);
+}
+
+/* Profile */
+.profile{
+    padding:40px;
+}
+
+.profile h2{
+    font-size:35px;
+}
+
+.profile p{
+    margin-top:10px;
+    color:#ccc;
+}
+
+/* Footer */
+footer{
+    text-align:center;
+    padding:20px;
+    background:black;
+    margin-top:40px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+
+.navbar{
+    flex-direction:column;
+}
+
+.banner{
+    height:350px;
+    padding:20px;
+}
+
+.banner h1{
+    font-size:35px;
+}
+
+.row-posters img{
+    width:130px;
+    height:190px;
+}
+
+}

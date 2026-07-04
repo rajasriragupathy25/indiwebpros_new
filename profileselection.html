@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netflix Profile Selection</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#141414;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    text-align:center;
+}
+
+h1{
+    font-size:50px;
+    margin-bottom:40px;
+}
+
+.profiles{
+    display:flex;
+    gap:30px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.profile{
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.profile:hover{
+    transform:scale(1.08);
+}
+
+.profile img{
+    width:150px;
+    height:150px;
+    border-radius:8px;
+    border:3px solid transparent;
+}
+
+.profile:hover img{
+    border-color:white;
+}
+
+.profile p{
+    margin-top:12px;
+    font-size:20px;
+    color:#b3b3b3;
+}
+
+.profile:hover p{
+    color:white;
+}
+
+.manage-btn{
+    margin-top:50px;
+    padding:12px 35px;
+    background:transparent;
+    color:#b3b3b3;
+    border:1px solid #b3b3b3;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.manage-btn:hover{
+    color:white;
+    border-color:white;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Who's Watching?</h1>
+
+<div class="profiles">
+
+<div class="profile">
+<img src="https://i.pravatar.cc/150?img=1" alt="Profile">
+<p>Sarumathi</p>
+</div>
+
+<div class="profile">
+<img src="https://i.pravatar.cc/150?img=5" alt="Profile">
+<p>Kids</p>
+</div>
+
+<div class="profile">
+<img src="https://i.pravatar.cc/150?img=8" alt="Profile">
+<p>Guest</p>
+</div>
+
+<div class="profile">
+<img src="https://i.pravatar.cc/150?img=10" alt="Profile">
+<p>Add Profile</p>
+</div>
+
+</div>
+
+<button class="manage-btn">Manage Profiles</button>
+
+</div>
+
+</body>
+</html>

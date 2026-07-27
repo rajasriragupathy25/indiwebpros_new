@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netflix — Watch something</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d12;
+    --surface: #12161e;
+    --surface-hi: #1b212c;
+    --accent: #e4572e;
+    --accent-dim: #7a2d18;
+    --gold: #f4b942;
+    --text: #eef0f3;
+    --muted: #8a8f98;
+    --border: rgba(255,255,255,0.08);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+  ::selection{ background:var(--accent); color:#fff; }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:32px;
+    padding:18px 4vw;
+    background:linear-gradient(to bottom, rgba(10,13,18,0.95), rgba(10,13,18,0.7));
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s;
+  }
+  header.scrolled{ border-color:var(--border); }
+  .logo{
+    font-family:'Anton', sans-serif;
+    font-size:26px;
+    letter-spacing:1px;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .logo span{ color:var(--text); }
+  nav{ display:flex; gap:22px; }
+  nav a{
+    color:var(--muted);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    transition:color .2s;
+  }
+  nav a:hover, nav a:focus-visible{ color:var(--text); }
+
+  .search-wrap{
+    margin-left:auto;
+    position:relative;
+    width:min(320px, 40vw);
+  }
+  .search-wrap svg{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:16px; height:16px; stroke:var(--muted); pointer-events:none;
+  }
+  #search{
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:10px 16px 10px 36px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+    transition:border-color .2s, background .2s;
+  }
+  #search:focus{ border-color:var(--accent); background:var(--surface-hi); }
+  #search::placeholder{ color:var(--muted); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:64vh;
+    display:flex; align-items:flex-end;
+    padding:6vw 4vw 4vw;
+    background:
+      linear-gradient(to top, var(--bg) 2%, rgba(10,13,18,0.15) 55%, rgba(10,13,18,0.55)),
+      linear-gradient(115deg, #241a14 0%, #0a0d12 55%);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 34px);
+    mask-image:linear-gradient(to bottom, black, transparent 75%);
+  }
+  .hero-content{ position:relative; max-width:560px; }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--gold); font-size:13px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px;
+  }
+  .hero-eyebrow::before{ content:"●"; font-size:8px; }
+  .hero h1{
+    font-family:'Anton', sans-serif;
+    font-size:clamp(38px, 6vw, 68px);
+    line-height:0.98;
+    letter-spacing:.5px;
+    margin-bottom:16px;
+    text-wrap:balance;
+  }
+  .hero p{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.65;
+    max-width:460px;
+    margin-bottom:26px;
+  }
+  .hero-meta{ display:flex; gap:14px; align-items:center; margin-bottom:26px; flex-wrap:wrap; }
+  .badge{
+    font-size:12px; font-weight:600; color:var(--text);
+    border:1px solid var(--border); padding:4px 10px; border-radius:5px;
+  }
+  .rating{ color:var(--gold); font-weight:700; font-size:14px; }
+  .hero-actions{ display:flex; gap:12px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 26px; border-radius:6px;
+    font-weight:700; font-size:14.5px; font-family:inherit;
+    border:none; cursor:pointer; transition:transform .15s, background .2s;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ background:#f0673d; }
+  .btn-ghost{ background:rgba(255,255,255,0.08); color:var(--text); }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.15); }
+
+  /* ---------- Rows ---------- */
+  main{ padding:0 4vw 6vw; margin-top:-40px; position:relative; z-index:2; }
+  .row{ margin-bottom:40px; }
+  .row-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .row-head h2{
+    font-size:19px; font-weight:700; letter-spacing:.2px;
+  }
+  .row-head span{ font-size:12px; color:var(--muted); }
+  .track{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:170px;
+    gap:14px;
+    overflow-x:auto;
+    padding-bottom:10px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--surface-hi) transparent;
+  }
+  .track::-webkit-scrollbar{ height:6px; }
+  .track::-webkit-scrollbar-thumb{ background:var(--surface-hi); border-radius:10px; }
+
+  .card{
+    position:relative;
+    border-radius:8px;
+    overflow:hidden;
+    cursor:pointer;
+    background:var(--surface);
+    border:1px solid var(--border);
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-6px) scale(1.03);
+    border-color:var(--accent);
+    box-shadow:0 16px 30px -10px rgba(228,87,46,0.35);
+    z-index:3;
+  }
+  .poster{
+    width:100%; aspect-ratio:2/3;
+    object-fit:cover; display:block;
+    background:var(--surface-hi);
+  }
+  .card-info{ padding:10px 12px 12px; }
+  .card-info h3{ font-size:13.5px; font-weight:600; margin-bottom:4px; line-height:1.3; }
+  .card-info .sub{ font-size:11.5px; color:var(--muted); display:flex; gap:8px; align-items:center; }
+  .card-info .sub .rating{ font-size:11.5px; }
+  .match{ color:#4fd67a; font-weight:700; }
+
+  /* ---------- Search results grid ---------- */
+  #results-section{ display:none; }
+  #results-section.active{ display:block; }
+  #results-section h2{ font-size:19px; font-weight:700; margin-bottom:16px; }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:16px;
+  }
+  .empty{
+    text-align:center; padding:60px 20px; color:var(--muted);
+  }
+  .empty h3{ color:var(--text); font-size:18px; margin-bottom:8px; }
+  .empty p{ font-size:14px; max-width:340px; margin:0 auto; }
+
+  .home-sections.hidden{ display:none; }
+
+  footer{
+    padding:30px 4vw 50px; color:var(--muted); font-size:12.5px;
+    border-top:1px solid var(--border); text-align:center;
+  }
+
+  @media (max-width:640px){
+    nav{ display:none; }
+    .search-wrap{ width:auto; flex:1; }
+    .hero{ min-height:52vh; padding-top:16vw; }
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="logo">NETFLIX</div>
+  <nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">Series</a>
+    <a href="#">Films</a>
+    <a href="#">My List</a>
+  </nav>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search" placeholder="Search titles, genres..." autocomplete="off">
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Featured tonight</div>
+    <h1 id="heroTitle">Midnight Harbor</h1>
+    <div class="hero-meta">
+      <span class="rating">★ 8.4</span>
+      <span class="badge">2024</span>
+      <span class="badge">Thriller</span>
+      <span class="badge">2h 11m</span>
+    </div>
+    <p>A dockworker uncovers a smuggling ring running beneath her city — and realizes the trail leads straight back to her own family.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary">▶ Play</button>
+      <button class="btn btn-ghost">＋ My List</button>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section id="results-section">
+    <h2 id="resultsTitle">Results</h2>
+    <div class="grid" id="resultsGrid"></div>
+  </section>
+
+  <div class="home-sections" id="homeSections"></div>
+</main>
+
+<footer>Netflix is a demo UI. All titles shown are fictional placeholders.</footer>
+
+<script>
+  // ---------- Data ----------
+  const GENRES = ["Trending Now","Thrillers","Comedies","Sci-Fi & Fantasy","Documentaries","Family Picks"];
+
+  const TITLES = [
+    ["Midnight Harbor","Thriller",8.4,2024],
+    ["The Long Static","Sci-Fi",7.9,2023],
+    ["Paper Kingdoms","Drama",8.1,2022],
+    ["Loud House Rules","Comedy",7.2,2024],
+    ["Echoes of Ferra","Fantasy",8.6,2021],
+    ["Coastal Static","Documentary",7.8,2023],
+    ["Nine Red Doors","Thriller",8.0,2020],
+    ["The Understudy","Comedy",6.9,2024],
+    ["Glass Orchard","Drama",8.3,2019],
+    ["Signal Lost","Sci-Fi",7.5,2022],
+    ["Kettle & Fire","Family",7.1,2023],
+    ["Amber Road","Documentary",8.2,2021],
+    ["Wildfire Season","Thriller",7.6,2024],
+    ["The Last Rehearsal","Drama",8.5,2020],
+    ["Junction 88","Sci-Fi",7.3,2022],
+    ["Salt & Concrete","Thriller",7.9,2023],
+    ["Two Left Shoes","Comedy",7.0,2021],
+    ["Northbound","Family",7.4,2024],
+    ["The Quiet Hour","Documentary",8.0,2022],
+    ["Static Bloom","Fantasy",8.1,2023],
+  ];
+
+  function seedFor(title){
+    // stable pseudo-random seed per title for placeholder art
+    return encodeURIComponent(title.replace(/\s+/g,'-').toLowerCase());
+  }
+
+  function posterURL(title, i){
+    return `https://picsum.photos/seed/${seedFor(title)}${i}/300/450`;
+  }
+
+  function cardHTML(item, idx){
+    const [title, genre, rating, year] = item;
+    return `
+      <div class="card" tabindex="0" data-title="${title.toLowerCase()}" data-genre="${genre.toLowerCase()}">
+        <img class="poster" loading="lazy" src="${posterURL(title, idx)}" alt="${title} poster">
+        <div class="card-info">
+          <h3>${title}</h3>
+          <div class="sub"><span class="match">${Math.round(rating*11)}% match</span><span>${year}</span></div>
+        </div>
+      </div>`;
+  }
+
+  // ---------- Render home rows ----------
+  const homeSections = document.getElementById('homeSections');
+
+  function shuffleSubset(arr, n){
+    return [...arr].sort(()=>Math.random()-0.5).slice(0, n);
+  }
+
+  GENRES.forEach((genre, gi)=>{
+    const picks = shuffleSubset(TITLES, 10);
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <div class="row-head">
+        <h2>${genre}</h2>
+        <span>${picks.length} titles</span>
+      </div>
+      <div class="track">
+        ${picks.map((item, i)=>cardHTML(item, gi*10+i)).join('')}
+      </div>`;
+    homeSections.appendChild(row);
+  });
+
+  // ---------- Search ----------
+  const searchInput = document.getElementById('search');
+  const resultsSection = document.getElementById('results-section');
+  const resultsGrid = document.getElementById('resultsGrid');
+  const resultsTitle = document.getElementById('resultsTitle');
+  const hero = document.getElementById('hero');
+
+  function runSearch(query){
+    const q = query.trim().toLowerCase();
+    if(!q){
+      resultsSection.classList.remove('active');
+      homeSections.classList.remove('hidden');
+      hero.style.display = '';
+      return;
+    }
+    hero.style.display = 'none';
+    homeSections.classList.add('hidden');
+    resultsSection.classList.add('active');
+
+    const matches = TITLES.filter(([title, genre]) =>
+      title.toLowerCase().includes(q) || genre.toLowerCase().includes(q)
+    );
+
+    resultsTitle.textContent = `Results for "${query}"`;
+
+    if(matches.length === 0){
+      resultsGrid.innerHTML = `
+        <div class="empty" style="grid-column:1/-1">
+          <h3>No matches for "${query}"</h3>
+          <p>Try a different title or genre — e.g. "thriller", "comedy", or "static".</p>
+        </div>`;
+      return;
+    }
+    resultsGrid.innerHTML = matches.map((item,i)=>cardHTML(item, i+50)).join('');
+  }
+
+  let debounce;
+  searchInput.addEventListener('input', (e)=>{
+    clearTimeout(debounce);
+    debounce = setTimeout(()=>runSearch(e.target.value), 150);
+  });
+
+  // ---------- Header scroll state ----------
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', ()=>{
+    header.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // ---------- Cycle hero feature every so often ----------
+  const heroTitleEl = document.getElementById('heroTitle');
+  setInterval(()=>{
+    const [t] = TITLES[Math.floor(Math.random()*TITLES.length)];
+    heroTitleEl.style.opacity = 0;
+    setTimeout(()=>{ heroTitleEl.textContent = t; heroTitleEl.style.opacity = 1; }, 300);
+  }, 8000);
+  heroTitleEl.style.transition = 'opacity .3s';
+</script>
+
+</body>
+</html>
